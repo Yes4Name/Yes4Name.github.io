@@ -14,14 +14,13 @@
             background: linear-gradient(135deg, #ff6f91, #f7a7b8);
             flex-direction: column;
             margin: 0;
-            position: relative;
             overflow: hidden;
         }
 
         #heartBtn {
             font-size: 100px;
-            padding: 35px;
-            background-color: transparent;
+            padding: 20px;
+            background: none;
             border: none;
             cursor: pointer;
             animation: heartbeat 1s infinite;
@@ -33,17 +32,14 @@
         }
 
         @keyframes heartbeat {
-            0% { transform: scale(1); }
-            25% { transform: scale(1.2); }
-            50% { transform: scale(1); }
-            75% { transform: scale(1.2); }
-            100% { transform: scale(1); }
+            0%, 50%, 100% { transform: scale(1); }
+            25%, 75% { transform: scale(1.2); }
         }
 
         #points {
             font-size: 28px;
             margin-top: 20px;
-            color: #fff;
+            color: white;
             font-weight: bold;
         }
 
@@ -60,7 +56,7 @@
             width: 250px;
             text-align: center;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-            transition: background-color 0.3s;
+            transition: background-color 0.3s ease-in-out;
         }
 
         #exchangeBtn:hover {
@@ -77,7 +73,8 @@
             background: rgba(0, 0, 0, 0.5);
             justify-content: center;
             align-items: center;
-            z-index: 20;
+            z-index: 100;
+            animation: fadeIn 0.3s ease-in-out;
         }
 
         #exchangeMenuContent {
@@ -86,29 +83,44 @@
             padding: 30px;
             width: 80%;
             max-width: 450px;
-            text-align: left;
+            text-align: center;
             box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
             animation: scaleIn 0.3s ease-out;
         }
 
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes scaleIn {
+            from { transform: scale(0.8); }
+            to { transform: scale(1); }
+        }
+
         .exchange-item {
-            margin-bottom: 25px;
+            margin: 20px 0;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            font-size: 20px;
+            font-size: 18px;
             color: #333;
             border-bottom: 1px solid #f0f0f0;
-            padding-bottom: 15px;
+            padding-bottom: 10px;
         }
 
         .exchange-item button {
             background-color: #ff8f94;
             color: white;
             border: none;
-            padding: 10px 20px;
-            border-radius: 30px;
+            padding: 10px 15px;
+            border-radius: 20px;
             cursor: pointer;
+            transition: background-color 0.2s;
+        }
+
+        .exchange-item button:hover {
+            background-color: #ffb1b7;
         }
 
         .exchange-item button:disabled {
@@ -125,6 +137,11 @@
             color: white;
             font-size: 18px;
             cursor: pointer;
+            transition: background-color 0.2s;
+        }
+
+        #closeMenuBtn:hover {
+            background-color: #ff6f91;
         }
     </style>
 </head>
@@ -137,7 +154,7 @@
 
     <div id="exchangeMenu">
         <div id="exchangeMenuContent">
-            <h3>Обмен сердечками</h3>
+            <h3>Обмен сердечек</h3>
             <div class="exchange-item">
                 <span>Валентинка</span>
                 <span>100 сердечек</span>
@@ -159,9 +176,7 @@
 
     <script>
         let hearts = 0;
-        const pointsDiv = document.getElementById('points').querySelector('span');
-        const botToken = "7597718252:AAGVC7K4dQis2Vg54iTsLgG1dIUiyNaK0kM";  // Замени на свой токен
-        const chatId = "5857669694";      // Замени на свой chat_id
+        const pointsDiv = document.querySelector('#points span');
 
         document.getElementById('heartBtn').addEventListener('click', () => {
             hearts += 10;
@@ -176,47 +191,23 @@
             document.getElementById('exchangeMenu').style.display = 'none';
         });
 
-        function sendTelegramMessage(message) {
-            fetch(`https://api.telegram.org/bot${botToken}/sendMessage`, {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ chat_id: chatId, text: message })
-            });
-        }
-
-        function getUserLocation(callback) {
-            fetch("https://api.ipify.org?format=json")
-                .then(response => response.json())
-                .then(data => {
-                    fetch(`http://ip-api.com/json/${data.ip}`)
-                        .then(response => response.json())
-                        .then(location => {
-                            callback(`IP: ${data.ip}, Город: ${location.city}, Страна: ${location.country}, Провайдер: ${location.isp}`);
-                        });
-                });
-        }
-
         function buyItem(cost, name, url) {
             if (hearts >= cost) {
                 hearts -= cost;
                 pointsDiv.textContent = hearts;
                 document.getElementById("exchangeMenu").style.display = "none";
-
-                if (name === "Секретный подарок") {
-                    getUserLocation(locationText => {
-                        sendTelegramMessage(`🎁 Кто-то купил ${name}!\n📍 ${locationText}`);
-                    });
+                alert(`${name} успешно получен!`);
+                if (url !== "#") {
+                    window.location.href = url;
                 }
-
-                window.location.href = url;
             } else {
                 alert("Недостаточно сердечек!");
             }
         }
 
-        document.getElementById('valentineBtn').addEventListener("click", () => buyItem(10, "Валентинка", "tap.html"));
-        document.getElementById('romanticBtn').addEventListener("click", () => buyItem(20, "Романтическое сообщение", "valen.html"));
-        document.getElementById('giftBtn').addEventListener("click", () => buyItem(50, "Секретный подарок", "#"));
+        document.getElementById('valentineBtn').addEventListener("click", () => buyItem(100, "Валентинка", "tap.html"));
+        document.getElementById('romanticBtn').addEventListener("click", () => buyItem(200, "Романтическое сообщение", "valen.html"));
+        document.getElementById('giftBtn').addEventListener("click", () => buyItem(500, "Секретный подарок", "#"));
     </script>
 </body>
 </html>
