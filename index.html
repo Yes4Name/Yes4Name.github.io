@@ -1,1 +1,153 @@
-1
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Валентинка для тебя</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #fbe8e7;
+            text-align: center;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            margin-top: 50px;
+        }
+
+        h1 {
+            color: #ff4b5c;
+            font-size: 36px;
+        }
+
+        .message {
+            font-size: 20px;
+            color: #ff7f7f;
+            margin-top: 20px;
+        }
+
+        .heart {
+            margin-top: 30px;
+            font-size: 100px;
+            color: red;
+            cursor: pointer;
+            transition: all 0.5s ease-in-out;
+            animation: pulse 1.5s infinite alternate;
+        }
+
+        @keyframes pulse {
+            0% {
+                transform: scale(1);
+            }
+            100% {
+                transform: scale(1.1);
+            }
+        }
+
+        .fireworks {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            pointer-events: none;
+            opacity: 0;
+            z-index: 100;
+        }
+
+        .firework {
+            position: absolute;
+            background-color: #ff4b5c;
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            animation: firework-animation 8s forwards;
+        }
+
+        @keyframes firework-animation {
+            0% {
+                transform: scale(1);
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(-300px) scale(3);
+                opacity: 0;
+            }
+        }
+
+        /* Стили для кнопки "Назад" */
+        .back-button {
+            display: inline-block;
+            margin-top: 30px;
+            padding: 10px 20px;
+            background-color: #ff4b5c;
+            color: white;
+            font-size: 18px;
+            font-weight: bold;
+            text-align: center;
+            border-radius: 25px;
+            text-decoration: none;
+            transition: background-color 0.3s, transform 0.3s;
+        }
+
+        .back-button:hover {
+            background-color: #ff6f80;
+            transform: scale(1.1);
+        }
+
+        .back-button:active {
+            background-color: #e63946;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Моя любимая!</h1>
+        <p class="message">
+            Я тебя очень люблю! Ты — моя радость, мое вдохновение и мое счастье. 
+            С каждым днем я понимаю, как мне повезло, что ты рядом.
+        </p>
+        <div id="heart" class="heart">❤️</div>
+        <div id="fireworks" class="fireworks"></div>
+
+        <!-- Кнопка "Назад" -->
+        <a href="javascript:history.back()" class="back-button">Назад</a>
+    </div>
+    <script>
+        const heartElement = document.getElementById('heart');
+        heartElement.addEventListener('click', showFireworks);
+
+        function showFireworks() {
+            const fireworksContainer = document.getElementById('fireworks');
+            fireworksContainer.style.opacity = 1;
+
+            for (let i = 0; i < 30; i++) {
+                createFirework(fireworksContainer);
+            }
+
+            setTimeout(() => {
+                fireworksContainer.style.opacity = 0;
+            }, 8000);
+        }
+
+        function createFirework(container) {
+            const firework = document.createElement('div');
+            firework.classList.add('firework');
+
+            const x = Math.random() * window.innerWidth;
+            const y = Math.random() * window.innerHeight;
+
+            firework.style.left = `${x}px`;
+            firework.style.top = `${y}px`;
+
+            container.appendChild(firework);
+
+            setTimeout(() => {
+                firework.remove();
+            }, 8000);
+        }
+    </script>
+</body>
+</html>
